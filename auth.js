@@ -29,14 +29,31 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 
+function isMobileDevice() {
+  return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
+}
+
 function signInWithGoogle() {
+  if (isMobileDevice()) {
+    // Popups are unreliable on mobile browsers — use redirect flow instead
+    auth.signInWithRedirect(googleProvider);
+    return;
+  }
   auth.signInWithPopup(googleProvider).catch((error) => {
     console.error("Sign-in error:", error);
-    if (error.code !== 'auth/popup-closed-by-user') {
-      alert("Sign in nahi ho saka. Dobara koshish karein.");
+    if (error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request') {
+      // Fallback: if the popup got blocked, try redirect instead
+      auth.signInWithRedirect(googleProvider);
+    } else if (error.code !== 'auth/popup-closed-by-user') {
+      alert("Sign in failed. Please try again.");
     }
   });
 }
+
+// Required to complete the sign-in after returning from a redirect (mobile flow)
+auth.getRedirectResult().catch((error) => {
+  console.error("Redirect sign-in error:", error);
+});
 
 function signOutUser() {
   auth.signOut();
