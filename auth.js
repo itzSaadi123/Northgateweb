@@ -59,6 +59,23 @@ function signOutUser() {
   auth.signOut();
 }
 
+function signUpWithEmail(name, email, password) {
+  return auth.createUserWithEmailAndPassword(email, password).then((result) => {
+    if (name) {
+      return result.user.updateProfile({ displayName: name }).then(() => result);
+    }
+    return result;
+  });
+}
+
+function signInWithEmail(email, password) {
+  return auth.signInWithEmailAndPassword(email, password);
+}
+
+function resetPassword(email) {
+  return auth.sendPasswordResetEmail(email);
+}
+
 function getInitial(name) {
   return name ? name.charAt(0).toUpperCase() : "U";
 }
@@ -97,19 +114,27 @@ function renderAuthUI(user) {
     if (mobileSlot) mobileSlot.innerHTML = mobileHTML;
   } else {
     const desktopBtnHTML = `
-      <button onclick="signInWithGoogle()" class="flex items-center gap-2 bg-white border-2 border-gray-200 hover:border-red-300 text-gray-700 text-sm font-bold px-3.5 py-2 rounded-full shadow-sm transition-all" aria-label="Sign in with Google">
-        <i class="fa-brands fa-google text-red-500"></i>
+      <a href="login.html" onclick="saveReturnUrl()" class="flex items-center gap-2 bg-gradient-to-r from-red-600 to-blue-800 hover:from-red-700 hover:to-blue-900 text-white text-sm font-bold px-4 py-2 rounded-full shadow-md transition-all" aria-label="Sign in">
+        <i class="fa-solid fa-user text-xs"></i>
         <span class="hidden sm:inline">Sign in</span>
-      </button>`;
+      </a>`;
 
     const mobileBtnHTML = `
-      <button onclick="signInWithGoogle()" class="w-full flex items-center justify-center gap-2 bg-red-50 text-red-600 font-bold py-2.5 px-3 rounded-xl mb-2 text-sm">
-        <i class="fa-brands fa-google"></i> Sign in with Google
-      </button>`;
+      <a href="login.html" onclick="saveReturnUrl()" class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-blue-800 text-white font-bold py-2.5 px-3 rounded-xl mb-2 text-sm">
+        <i class="fa-solid fa-user"></i> Sign In / Create Account
+      </a>`;
 
     if (desktopSlot) desktopSlot.innerHTML = desktopBtnHTML;
     if (mobileSlot) mobileSlot.innerHTML = mobileBtnHTML;
   }
+}
+
+function saveReturnUrl() {
+  try {
+    if (!window.location.pathname.endsWith('login.html')) {
+      sessionStorage.setItem('ngReturnTo', window.location.href);
+    }
+  } catch (e) {}
 }
 
 auth.onAuthStateChanged((user) => {
