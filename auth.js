@@ -34,25 +34,25 @@ function isMobileDevice() {
 }
 
 function signInWithGoogle() {
-  if (isMobileDevice()) {
-    // Popups are unreliable on mobile browsers — use redirect flow instead
-    auth.signInWithRedirect(googleProvider);
-    return;
-  }
   auth.signInWithPopup(googleProvider).catch((error) => {
     console.error("Sign-in error:", error);
-    if (error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request') {
-      // Fallback: if the popup got blocked, try redirect instead
+    if (error.code === 'auth/popup-blocked' || error.code === 'auth/operation-not-supported-in-this-environment') {
+      // Only fall back to redirect if popups are genuinely unavailable
       auth.signInWithRedirect(googleProvider);
-    } else if (error.code !== 'auth/popup-closed-by-user') {
-      alert("Sign in failed. Please try again.");
+    } else if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
+      alert("Sign in failed (" + (error.code || 'unknown') + "). Please try again.");
     }
   });
 }
 
-// Required to complete the sign-in after returning from a redirect (mobile flow)
-auth.getRedirectResult().catch((error) => {
+// Completes sign-in if we ever fell back to the redirect flow
+auth.getRedirectResult().then((result) => {
+  if (result && result.user) {
+    console.log("Redirect sign-in completed for:", result.user.email);
+  }
+}).catch((error) => {
   console.error("Redirect sign-in error:", error);
+  alert("Sign in failed (" + (error.code || 'unknown') + "). Please try again.");
 });
 
 function signOutUser() {
