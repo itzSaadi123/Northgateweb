@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="NorthGate Umrah Package - 15 Days spiritual journey to Makkah & Madinah. June-July departure. Includes flights, visa, hotels, transfers. Best Umrah deals 2026.">
+    <meta name="keywords" content="Umrah package 2026, Umrah 15 days, Makkah Madinah package, Umrah visa, spiritual journey, cheapest Umrah package Pakistan">
+    <meta name="author" content="NorthGate Visa Service Center">
+    <title>NorthGate Umrah Package | 15 Days Spiritual Journey | Makkah Madinah 2026</title>
+    <link rel="icon" type="image/webp" href="favicon.webp">
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fef9f5 0%, #f0f2f5 100%);
+            color: #1f2937;
+        }
+        
+        /* Prevent body scroll when mobile menu is open */
+        body.menu-open {
+            overflow: hidden;
+        }
+        
+        .heading-font { font-family: 'Playfair Display', serif; }
+        
+        .bg-logo-fixed {
+            position: fixed;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 65%;
+            max-width: 500px;
+            opacity: 0.08;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .content-wrapper { position: relative; z-index: 1; }
+        
+        .umrah-hero {
+            background: linear-gradient(135deg, rgba(0,0,0,0.55), rgba(100,20,20,0.75)), url('https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=1600');
+            background-size: cover;
+            background-position: center 30%;
+            min-height: 75vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        .nav-link {
+            position: relative;
+            font-weight: 600;
+        }
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -6px;
+            left: 0;
+            background: linear-gradient(90deg, #e11d3f, #3b82f6);
+            transition: width 0.25s;
+        }
+        .nav-link:hover:after { width: 100%; }
+        
+        .package-card {
+            background: #ffffff;
+            border-radius: 28px;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        .package-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 40px rgba(225,29,63,0.2);
+        }
+        
+        .info-card {
+            background: #ffffff;
+            border-radius: 20px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+        }
+        
+        .btn-wa {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            transition: all 0.3s;
+        }
+        .btn-wa:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(37,211,102,0.35);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #e11d3f, #1e3a8a);
+            transition: all 0.3s;
+        }
+        .btn-primary:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 25px rgba(225,29,63,0.4);
+        }
+        
+        .animate-bounce {
+            animation: bounce 1s infinite;
+        }
+        @keyframes bounce {
+            0%,100%{ transform: translateY(0); }
+            50%{ transform: translateY(5px); }
+        }
+        
+        .counter-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #e11d3f, #f59e0b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .floating-shape {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(225,29,63,0.1), transparent);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        
+        @media (max-width: 640px) {
+            .umrah-hero { min-height: 60vh; background-position: center 20%; }
+            .umrah-hero h1 { font-size: 32px !important; }
+            .package-card { margin-bottom: 1rem; }
+            .counter-number { font-size: 2.5rem; }
+            .quick-links-grid {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 0.5rem;
+            }
+        }
+        
+        /* Custom scroll */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #e11d3f, #1e3a8a); border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <img src="favicon.webp" class="bg-logo-fixed" alt="" onerror="this.style.display='none'">
+
+    <div class="content-wrapper">
+
+        <!-- NAVBAR - Same style as index.html (No Dark Mode) -->
+        <nav class="bg-white/95 backdrop-blur-md border-b border-red-200 sticky top-0 z-50 shadow-sm">
+            <div class="max-w-7xl mx-auto px-5 lg:px-8">
+                <div class="flex justify-between items-center py-3 md:py-4">
+                    <div class="flex items-center gap-3">
+                        <img src="logo.webp" class="h-12 w-auto object-contain" onerror="this.src='https://placehold.co/60x60/e11d3f/white?text=NG'">
+                        <div>
+                            <h1 class="text-2xl md:text-3xl font-bold heading-font bg-gradient-to-r from-red-600 to-blue-700 bg-clip-text text-transparent">NorthGate</h1>
+                            <p class="text-[9px] md:text-[10px] text-gray-500 font-semibold tracking-wide">Visa Service Center</p>
+                        </div>
+                    </div>
+                    <div class="hidden md:flex items-center gap-6 text-sm font-semibold text-gray-700">
+                        <a href="index.html" class="nav-link hover:text-red-600">HOME</a>
+                        <a href="index.html#services" class="nav-link hover:text-red-600">SERVICES</a>
+                        <a href="countries.html" class="nav-link hover:text-red-600">COUNTRIES</a>
+                        <a href="index.html#why" class="nav-link hover:text-red-600">WHY US</a>
+                        <a href="index.html#apply" class="nav-link hover:text-red-600">APPLY</a>
+                        <a href="index.html#faq" class="nav-link hover:text-red-600">FAQ</a>
+                        <a href="about.html" class="nav-link hover:text-red-600">ABOUT</a>
+                        <a href="terms.html" class="nav-link hover:text-red-600">TERMS</a>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div id="authSlot"></div>
+                        <a href="https://wa.me/923452613587" target="_blank" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white text-sm font-bold px-4 py-2.5 rounded-full shadow-md transition-all">
+                            <i class="fab fa-whatsapp text-lg"></i>
+                            <span class="hidden sm:inline">WhatsApp</span>
+                        </a>
+                        <button onclick="toggleMenu()" class="md:hidden text-3xl text-red-600 focus:outline-none">☰</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mobile Menu - Same as index.html -->
+            <div id="mobileMenu" class="hidden md:hidden absolute left-0 right-0 top-full z-50 bg-white border-b border-gray-200 px-4 py-3 shadow-xl max-h-[70vh] overflow-y-auto">
+                <div id="authSlotMobile"></div>
+                <div class="flex flex-col gap-1 text-base font-semibold">
+                    <a href="index.html" onclick="closeMenu()" class="py-2 px-3 rounded-xl hover:bg-red-50 flex items-center gap-2 text-sm"><i class="fa-solid fa-house text-red-500 w-4"></i> HOME</a>
+                    <a href="index.html#services" onclick="closeMenu()" class="py-2 px-3 rounded-xl hover:bg-red-50 flex items-center gap-2 text-sm"><i class="fa-solid fa-briefcase text-red-500 w-4"></i> SERVICES</a>
+                    <a href="countries.html" onclick="closeMenu()" class="py-2 px-3 rounded-xl hover:bg-red-50 flex items-center gap-2 text-sm"><i class="fa-solid fa-globe text-red-500 w-4"></i> COUNTRIES</a>
+                    <a href="index.html#why" onclick="closeMenu()" class="py-2 px-3 rounded-xl hover:bg-red-50 flex items-center gap-2 text-sm"><i class="fa-solid fa-star text-red-500 w-4"></i> WHY US</a>
+                    <a href="index.html#apply" onclick="closeMenu()" class="py-2 px-3 rounded-xl hover:bg-red-50 flex items-center gap-2 text-sm"><i class="fa-solid fa-file-pen text-red-500 w-4"></i> APPLY</a>
+                    <a href="index.html#faq" onclick="closeMenu()" class="py-2 px-3 rounded-xl hover:bg-red-50 flex items-center gap-2 text-sm"><i class="fa-solid fa-question-circle text-red-500 w-4"></i> FAQ</a>
+                    <a href="about.html" onclick="closeMenu()" class="py-2 px-3 rounded-xl hover:bg-red-50 flex items-center gap-2 text-sm"><i class="fa-solid fa-building text-red-500 w-4"></i> ABOUT</a>
+                    <a href="terms.html" onclick="closeMenu()" class="py-2 px-3 rounded-xl hover:bg-red-50 flex items-center gap-2 text-sm"><i class="fa-solid fa-scale-balanced text-red-500 w-4"></i> TERMS</a>
+                    <a href="index.html#testimonials" onclick="closeMenu()" class="py-2 px-3 rounded-xl hover:bg-red-50 flex items-center gap-2 text-sm"><i class="fa-solid fa-comment-dots text-red-500 w-4"></i> REVIEWS</a>
+                    <a href="student-visa.html" onclick="closeMenu()" class="py-2 px-3 rounded-xl hover:bg-red-50 flex items-center gap-2 text-sm"><i class="fa-solid fa-user-graduate text-red-500 w-4"></i> STUDENT VISA</a>
+                    <a href="Tracker.html" onclick="closeMenu()" class="py-2 px-3 rounded-xl hover:bg-red-50 flex items-center gap-2 text-sm"> <i class="fa-solid fa-list-check text-red-500 text-base flex-shrink-0"></i>TRACK YOUR APPLICATION</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- HERO SECTION -->
+        <section class="umrah-hero text-white relative">
+            <div class="floating-shape"></div>
+            <div class="max-w-7xl mx-auto px-5 text-center py-20 md:py-24">
+                <div class="inline-block bg-white/20 backdrop-blur-md px-5 py-2 rounded-full text-sm font-semibold mb-6 border border-white/30">
+                    <i class="fa-solid fa-kaaba text-yellow-300 mr-2"></i> LIMITED SLOTS • BOOK EARLY
+                </div>
+                <h1 class="text-5xl md:text-7xl font-bold heading-font mb-6 leading-tight">
+                    Umrah Package<br>
+                    <span class="text-yellow-300 inline-flex items-center gap-2">15 Days <i class="fa-solid fa-moon-star text-2xl"></i></span>
+                </h1>
+                <p class="text-xl max-w-2xl mx-auto leading-relaxed opacity-95">Experience a spiritual journey with our carefully designed Umrah package, offering comfort, convenience, and complete assistance throughout your stay in the holy cities.</p>
+                <div class="flex flex-wrap justify-center gap-4 mt-10">
+                    <a href="https://wa.me/923452613587" target="_blank" class="btn-wa text-white font-bold px-10 py-4 rounded-2xl text-lg flex items-center gap-3 shadow-2xl transition-all">
+                        <i class="fa-brands fa-whatsapp text-xl"></i> RESERVE YOUR SLOT
+                    </a>
+                    <a href="#packages" class="border-2 border-white/80 hover:bg-white/20 backdrop-blur-sm px-8 py-4 rounded-2xl text-lg font-semibold transition-all">
+                        <i class="fa-solid fa-chevron-down mr-2"></i> VIEW PACKAGES
+                    </a>
+                </div>
+            </div>
+            <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-white/60 text-xs flex flex-col items-center gap-1 font-medium">
+                <span>SCROLL TO EXPLORE</span> <i class="fa-solid fa-chevron-down animate-bounce"></i>
+            </div>
+        </section>
+
+        <!-- DURATION SECTION -->
+        <section class="py-20 bg-white/90">
+            <div class="max-w-7xl mx-auto px-5">
+                <div class="text-center mb-12">
+                    <span class="bg-gradient-to-r from-red-100 to-red-200 text-red-700 px-5 py-1.5 text-sm font-bold rounded-full inline-flex items-center gap-2">
+                        <i class="fa-regular fa-calendar-alt"></i> SPIRITUAL JOURNEY
+                    </span>
+                    <h2 class="text-4xl md:text-5xl font-bold heading-font mt-5 bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">15 Days of Blessings</h2>
+                    <p class="mt-3 text-gray-500 max-w-md mx-auto">June – July 2026 Departure Window</p>
+                </div>
+                
+                <div class="max-w-3xl mx-auto">
+                    <div class="grid grid-cols-2 gap-6 mb-8">
+                        <div class="relative overflow-hidden bg-gradient-to-br from-red-50 to-rose-50 p-8 rounded-3xl shadow-lg border border-red-200 text-center hover:shadow-xl transition-all">
+                            <div class="absolute -top-10 -right-10 w-24 h-24 bg-red-200/30 rounded-full blur-2xl"></div>
+                            <i class="fa-solid fa-mosque text-5xl text-red-600 mb-3"></i>
+                            <div class="counter-number text-5xl md:text-6xl font-black">7</div>
+                            <p class="font-bold text-gray-800 text-lg mt-2">Days in <span class="text-red-600">Makkah</span></p>
+                            <p class="text-sm text-gray-500 mt-1">Blessed days near Haram</p>
+                        </div>
+                        <div class="relative overflow-hidden bg-gradient-to-br from-blue-50 to-sky-50 p-8 rounded-3xl shadow-lg border border-blue-200 text-center hover:shadow-xl transition-all">
+                            <div class="absolute -top-10 -right-10 w-24 h-24 bg-blue-200/30 rounded-full blur-2xl"></div>
+                            <i class="fa-solid fa-mosque text-5xl text-blue-600 mb-3"></i>
+                            <div class="counter-number text-5xl md:text-6xl font-black">8</div>
+                            <p class="font-bold text-gray-800 text-lg mt-2">Days in <span class="text-blue-600">Madinah</span></p>
+                            <p class="text-sm text-gray-500 mt-1">Peace and tranquility</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-2xl p-5 text-center border border-amber-200 shadow-md">
+                        <div class="flex items-center justify-center gap-3 flex-wrap">
+                            <i class="fa-solid fa-calendar-check text-amber-600 text-2xl"></i>
+                            <span class="font-semibold text-gray-700">Travel Window:</span>
+                            <span class="font-bold text-amber-800 bg-amber-100 px-4 py-1.5 rounded-full">20 June – 15 July 2026</span>
+                            <span class="text-sm text-gray-500">(Flexible dates available)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- INCLUDES SECTION -->
+        <section class="py-20 bg-gradient-to-br from-gray-50 to-gray-100">
+            <div class="max-w-7xl mx-auto px-5">
+                <div class="text-center mb-12">
+                    <span class="bg-red-100 text-red-700 px-5 py-1.5 text-sm font-bold rounded-full inline-flex items-center gap-2">
+                        <i class="fa-regular fa-gem"></i> PREMIUM INCLUSIONS
+                    </span>
+                    <h2 class="text-4xl md:text-5xl font-bold heading-font mt-5">What's Included</h2>
+                    <p class="mt-3 text-gray-500">Everything you need for a comfortable and blessed journey</p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-5 max-w-4xl mx-auto">
+                    <div class="info-card text-center p-6 bg-white hover:bg-gradient-to-br hover:from-white hover:to-red-50">
+                        <div class="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-inner">
+                            <i class="fa-solid fa-plane text-2xl text-red-600"></i>
+                        </div>
+                        <p class="font-bold text-gray-800">Return Air Tickets</p>
+                        <p class="text-xs text-gray-400 mt-1">Economy Class</p>
+                    </div>
+                    <div class="info-card text-center p-6 bg-white hover:bg-gradient-to-br hover:from-white hover:to-green-50">
+                        <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-inner">
+                            <i class="fa-solid fa-passport text-2xl text-green-600"></i>
+                        </div>
+                        <p class="font-bold text-gray-800">Umrah Visa</p>
+                        <p class="text-xs text-gray-400 mt-1">Complete processing</p>
+                    </div>
+                    <div class="info-card text-center p-6 bg-white hover:bg-gradient-to-br hover:from-white hover:to-blue-50">
+                        <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-inner">
+                            <i class="fa-solid fa-hotel text-2xl text-blue-600"></i>
+                        </div>
+                        <p class="font-bold text-gray-800">Hotel Accommodation</p>
+                        <p class="text-xs text-gray-400 mt-1">Quality hotels</p>
+                    </div>
+                    <div class="info-card text-center p-6 bg-white hover:bg-gradient-to-br hover:from-white hover:to-purple-50">
+                        <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-inner">
+                            <i class="fa-solid fa-van-shuttle text-2xl text-purple-600"></i>
+                        </div>
+                        <p class="font-bold text-gray-800">Airport Transfers</p>
+                        <p class="text-xs text-gray-400 mt-1">Makkah ↔ Madinah</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PACKAGES SECTION -->
+        <section id="packages" class="py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-5">
+                <div class="text-center mb-12">
+                    <span class="bg-gradient-to-r from-amber-100 to-red-100 text-red-700 px-5 py-1.5 text-sm font-bold rounded-full">🏨 CHOOSE YOUR COMFORT</span>
+                    <h2 class="text-4xl md:text-5xl font-bold heading-font mt-5">Package Options</h2>
+                    <p class="mt-3 text-gray-500">Per person • Inclusive of all taxes</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- 3 STAR -->
+                    <div class="package-card p-8 text-center relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-400 to-amber-600"></div>
+                        <div class="mb-3"><i class="fa-solid fa-star text-amber-400 text-xl"></i><i class="fa-solid fa-star text-amber-400 text-xl"></i><i class="fa-solid fa-star text-amber-400 text-xl"></i></div>
+                        <h3 class="text-2xl font-bold text-gray-800">3-Star Package</h3>
+                        <p class="text-gray-500 text-sm mt-1">Comfort & Value</p>
+                        <div class="mt-6 bg-gradient-to-r from-amber-50 to-yellow-50 p-5 rounded-2xl">
+                            <p class="text-sm font-semibold text-gray-600">Triple Sharing Room</p>
+                            <p class="text-3xl font-black text-red-600 mt-1">PKR 135,000</p>
+                        </div>
+                        <a href="https://wa.me/923452613587?text=I'm%20interested%20in%203-Star%20Umrah%20Package%20(15%20days)" target="_blank" class="btn-primary inline-block mt-8 text-white font-bold py-3.5 rounded-xl w-full transition-all shadow-md">Book Now <i class="fa-brands fa-whatsapp ml-2"></i></a>
+                    </div>
+
+                    <!-- 4 STAR - Most Popular -->
+                    <div class="package-card p-8 text-center relative border-2 border-red-300 shadow-xl transform scale-105 md:scale-105 z-10">
+                        <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-red-600 to-amber-500 text-white text-xs font-bold px-5 py-1.5 rounded-full shadow-lg flex items-center gap-1"><i class="fa-solid fa-fire"></i> MOST POPULAR</div>
+                        <div class="mb-3 mt-3"><i class="fa-solid fa-star text-amber-400 text-xl"></i><i class="fa-solid fa-star text-amber-400 text-xl"></i><i class="fa-solid fa-star text-amber-400 text-xl"></i><i class="fa-solid fa-star text-amber-400 text-xl"></i></div>
+                        <h3 class="text-2xl font-bold text-gray-800">4-Star Package</h3>
+                        <p class="text-gray-500 text-sm mt-1">Premium Comfort</p>
+                        <div class="mt-6 space-y-3">
+                            <div class="bg-gradient-to-r from-blue-50 to-sky-50 p-3 rounded-xl"><p class="text-sm font-semibold">Triple Sharing</p><p class="text-2xl font-bold text-red-600">PKR 160,000</p></div>
+                            <div class="bg-gradient-to-r from-blue-50 to-sky-50 p-3 rounded-xl"><p class="text-sm font-semibold">Double Sharing</p><p class="text-2xl font-bold text-red-600">PKR 175,000</p></div>
+                        </div>
+                        <a href="https://wa.me/923452613587?text=I'm%20interested%20in%204-Star%20Umrah%20Package%20(15%20days)" target="_blank" class="btn-primary inline-block mt-6 text-white font-bold py-3.5 rounded-xl w-full transition-all shadow-md">Book Now <i class="fa-brands fa-whatsapp ml-2"></i></a>
+                    </div>
+
+                    <!-- 5 STAR -->
+                    <div class="package-card p-8 text-center relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-indigo-600"></div>
+                        <div class="mb-3"><i class="fa-solid fa-star text-amber-400 text-xl"></i><i class="fa-solid fa-star text-amber-400 text-xl"></i><i class="fa-solid fa-star text-amber-400 text-xl"></i><i class="fa-solid fa-star text-amber-400 text-xl"></i><i class="fa-solid fa-star text-amber-400 text-xl"></i></div>
+                        <h3 class="text-2xl font-bold text-gray-800">5-Star Package</h3>
+                        <p class="text-gray-500 text-sm mt-1">Luxury Experience</p>
+                        <div class="mt-6 space-y-3">
+                            <div class="bg-gradient-to-r from-purple-50 to-indigo-50 p-3 rounded-xl"><p class="text-sm font-semibold">Triple Sharing</p><p class="text-2xl font-bold text-red-600">PKR 190,000</p></div>
+                            <div class="bg-gradient-to-r from-purple-50 to-indigo-50 p-3 rounded-xl"><p class="text-sm font-semibold">Double Sharing</p><p class="text-2xl font-bold text-red-600">PKR 210,000</p></div>
+                        </div>
+                        <a href="https://wa.me/923452613587?text=I'm%20interested%20in%205-Star%20Umrah%20Package%20(15%20days)" target="_blank" class="btn-primary inline-block mt-6 text-white font-bold py-3.5 rounded-xl w-full transition-all shadow-md">Book Now <i class="fa-brands fa-whatsapp ml-2"></i></a>
+                    </div>
+                </div>
+
+                <!-- PREMIUM Haram View -->
+                <div class="mt-12 max-w-3xl mx-auto">
+                    <div class="relative bg-gradient-to-br from-amber-50 via-red-50 to-rose-100 p-8 rounded-3xl border-2 border-amber-400 shadow-2xl overflow-hidden">
+                        <div class="absolute -top-5 -right-5 w-32 h-32 bg-amber-300/30 rounded-full blur-2xl"></div>
+                        <div class="absolute -bottom-5 -left-5 w-32 h-32 bg-red-300/30 rounded-full blur-2xl"></div>
+                        <div class="text-center relative z-10">
+                            <div class="inline-block bg-gradient-to-r from-amber-500 to-red-600 text-white text-xs font-bold px-5 py-1.5 rounded-full mb-4">🌟 PREMIUM COLLECTION 🌟</div>
+                            <div class="flex justify-center gap-1 text-2xl text-amber-500 mb-2"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                            <h3 class="text-3xl font-bold heading-font">5-Star Premium</h3>
+                            <p class="text-gray-700 mt-2 flex items-center justify-center gap-2"><i class="fa-solid fa-eye text-amber-600"></i> Room with view of Kaaba & Masjid al-Haram</p>
+                            <div class="mt-5 bg-white/80 backdrop-blur-sm p-4 rounded-2xl inline-block mx-auto"><p class="text-sm text-gray-500">Per Person</p><p class="text-4xl font-black text-red-700">PKR 250,000</p></div>
+                            <p class="text-sm text-amber-700 mt-4 flex items-center justify-center gap-2"><i class="fa-solid fa-clock"></i> Limited slots available. Book early to secure your preferred dates.</p>
+                            <a href="https://wa.me/923452613587?text=I'm%20interested%20in%20PREMIUM%20Haram%20View%20Umrah%20Package" target="_blank" class="inline-block mt-6 bg-gradient-to-r from-amber-600 to-red-700 hover:from-amber-700 hover:to-red-800 text-white font-bold px-10 py-4 rounded-2xl text-lg shadow-xl transition-all">Reserve Haram View <i class="fa-brands fa-whatsapp ml-2"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA SECTION -->
+        <section class="py-20 bg-gradient-to-r from-red-800 via-red-700 to-blue-800 text-white relative overflow-hidden">
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=800')] opacity-10 bg-cover bg-center"></div>
+            <div class="max-w-4xl mx-auto px-5 text-center relative z-10">
+                <i class="fa-solid fa-kaaba text-6xl mb-5 opacity-80"></i>
+                <h2 class="text-4xl md:text-5xl font-bold heading-font mb-5">Ready for Your Spiritual Journey?</h2>
+                <p class="text-xl mb-8 text-white/90">Contact us today to secure your spot for this blessed journey to the holy cities.</p>
+                <div class="flex flex-wrap justify-center gap-5">
+                    <a href="https://wa.me/923452613587" target="_blank" class="bg-white text-red-700 hover:bg-amber-100 font-extrabold px-10 py-4 rounded-2xl text-lg flex items-center gap-3 shadow-2xl transition-all"><i class="fa-brands fa-whatsapp text-2xl text-green-600"></i> BOOK NOW</a>
+                    <a href="index.html#contact" class="border-2 border-white/80 hover:bg-white/20 backdrop-blur-sm px-8 py-4 rounded-2xl text-lg font-semibold transition-all">CONTACT US</a>
+                </div>
+                <p class="text-sm text-white/60 mt-6"><i class="fa-regular fa-clock"></i> 24/7 Support • Quick Response</p>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="relative overflow-hidden bg-gradient-to-br from-gray-900 via-blue-950 to-gray-900 text-white py-12">
+            <div class="max-w-7xl mx-auto px-5 grid md:grid-cols-4 gap-10">
+                <div class="space-y-4"><div class="h-20 w-20 rounded-full bg-white flex items-center justify-center shadow-xl overflow-hidden"><img src="logo.webp" class="h-full w-full object-contain p-2" onerror="this.src='https://placehold.co/80x80/e11d3f/white?text=NG'"></div><h3 class="text-2xl font-bold tracking-tight">NorthGate</h3><p class="text-sm text-red-200 font-medium">Visa Service Center</p><p class="text-xs opacity-70 border-l-2 border-red-500 pl-3 py-1">Independent • Ethical • Transparent</p></div>
+                <div><h4 class="font-bold mb-6 text-lg border-b border-red-500/30 pb-1 inline-block">Quick Links</h4><ul class="quick-links-grid space-y-2 text-sm md:space-y-2"><li><a href="about.html" class="hover:text-red-300 transition flex items-center gap-2"> About</a></li><li><a href="index.html#faq" class="hover:text-red-300 transition flex items-center gap-2"> FAQ</a></li><li><a href="index.html#apply" class="hover:text-red-300 transition flex items-center gap-2"> Apply</a></li><li><a href="terms.html" class="hover:text-red-300 transition flex items-center gap-2"> Terms</a></li></ul></div>
+                <div><h4 class="font-bold mb-6 text-lg border-b border-red-500/30 pb-1 inline-block">Contact</h4><div class="space-y-3"><a href="https://wa.me/923452613587" target="_blank" class="flex items-center gap-3 hover:text-green-400 transition"><span class="bg-white/10 p-2 rounded-lg"><i class="fab fa-whatsapp text-green-400 text-lg"></i></span><span class="text-sm">+92 345 2613587</span></a><a href="mailto:support@northgatevisaservices.com" class="flex items-center gap-3 hover:text-red-300 transition"><span class="bg-white/10 p-2 rounded-lg"><i class="fa-regular fa-envelope text-red-400"></i></span><span class="text-sm">support@northgatevisaservices.com</span></a><div class="flex items-center gap-3"><span class="bg-white/10 p-2 rounded-lg"><i class="fa-regular fa-clock"></i></span><span class="text-sm">Mon-Sat: 9AM - 7PM</span></div></div></div>
+            </div>
+            <div class="text-center text-[10px] text-red-200/60 border-t border-white/10 mt-12 pt-8">© 2026 NorthGate Visa Service Center. All Rights Reserved.</div>
+        </footer>
+
+        <script>
+            function toggleMenu() {
+                const menu = document.getElementById('mobileMenu');
+                menu.classList.toggle('hidden');
+                if (!menu.classList.contains('hidden')) {
+                    document.body.classList.add('menu-open');
+                } else {
+                    document.body.classList.remove('menu-open');
+                }
+            }
+            function closeMenu() {
+                document.getElementById('mobileMenu').classList.add('hidden');
+                document.body.classList.remove('menu-open');
+            }
+            
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if(href === "#" || href === "") return;
+                    const target = document.querySelector(href);
+                    if(target) {
+                        e.preventDefault();
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+        </script>
+    </div>
+    <script src="chat-widget.js"></script>
+    <script src="auth.js"></script>
+</body>
+</html>

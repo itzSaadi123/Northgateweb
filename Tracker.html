@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Track your live visa application status - NorthGate Visa Service Center.">
+    <title>Track Visa Application | NorthGate Visa Service Center</title>
+    
+    <link rel="icon" type="image/webp" href="logo.webp">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:wght@700;800&display=swap');
+        
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            position: relative;
+            overflow-x: hidden;
+            min-height: 100vh;
+            
+            /* Left & Right Spread Gradients */
+            background-color: #f1f4f9; 
+            background-image: 
+                radial-gradient(circle at -10% 35%, #cbdcfc 0%, transparent 75%),   
+                radial-gradient(circle at 110% 65%, #fcd6d6 0%, transparent 75%),   
+                radial-gradient(circle at 50% 0%, #e2eaf4 0%, transparent 60%);
+            background-attachment: fixed;
+        }
+        
+        .bg-logo-fixed {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 480px;
+            opacity: 0.04; 
+            z-index: 0;
+            pointer-events: none;
+            user-select: none;
+            filter: grayscale(100%);
+        }
+        
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02);
+        }
+        
+        .heading-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* --- FIXED DYNAMIC UTILITIES --- */
+        .step-faded {
+            opacity: 0.45;
+        }
+        .step-faded h4 {
+            color: #64748b !important;
+        }
+        .step-faded p {
+            color: #94a3b8 !important;
+        }
+        .step-faded .num-circle {
+            background: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+            color: #94a3b8 !important;
+        }
+        .step-faded .completed-tag {
+            display: none !important;
+        }
+        
+        /* Completed steps state */
+        .step-completed {
+            opacity: 1 !important;
+        }
+        .step-completed h4 {
+            color: #0f172a !important;
+            font-weight: 600;
+        }
+        .step-completed p {
+            color: #475569 !important;
+        }
+        .step-completed .num-circle {
+            background: #10b981 !important; 
+            color: white !important;
+            border-color: #10b981 !important;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.1);
+        }
+        .step-completed .completed-tag {
+            display: inline-flex !important;
+        }
+
+        /* Active current status state */
+        .step-active {
+            opacity: 1 !important;
+            transform: translateY(-1px);
+            transition: all 0.4s ease;
+        }
+        .step-active h4 {
+            color: #1e3a8a !important; 
+            font-weight: 700 !important;
+        }
+        .step-active p {
+            color: #334155 !important;
+        }
+        .step-active .num-circle {
+            background: #1e3a8a !important;
+            color: white !important;
+            border-color: #1e3a8a !important;
+            box-shadow: 0 0 0 5px rgba(30, 58, 138, 0.08), 0 4px 10px rgba(30, 58, 138, 0.12);
+        }
+        .step-active .completed-tag {
+            display: none !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-3 sm:p-6">
+
+    <img src="logo.webp" class="bg-logo-fixed" alt="NorthGate Background Logo" onerror="this.style.display='none'">
+
+    <div class="content-wrapper w-full max-w-xl rounded-2xl sm:rounded-3xl p-4 sm:p-10 my-6">
+        
+        <div class="text-center mb-6 sm:mb-8">
+            <h2 class="text-2xl sm:text-4xl font-bold heading-font text-slate-900 mb-1.5 tracking-tight">Track Application</h2>
+            <p class="text-xs sm:text-sm text-slate-500 font-medium">Enter your Tracking ID to load your live progress.</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-2.5 mb-6 sm:mb-8">
+            <div class="relative flex-1">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                    <i class="fa-solid fa-magnifying-glass text-xs sm:text-sm"></i>
+                </span>
+                <input type="text" id="visaId" placeholder="e.g., NGV-2026****" 
+                       class="w-full pl-10 pr-4 py-2.5 sm:py-3.5 bg-slate-50/50 border-2 border-slate-100 rounded-xl sm:rounded-2xl text-sm sm:text-base text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-800 focus:bg-white transition-all font-medium shadow-inner">
+            </div>
+            <button onclick="trackVisa()" 
+                    class="w-full sm:w-auto px-6 py-2.5 sm:py-3.5 bg-gradient-to-r from-red-600 to-blue-800 hover:from-red-700 hover:to-blue-900 text-white font-semibold rounded-xl sm:rounded-2xl shadow active:scale-[0.98] transition-all text-sm sm:text-base whitespace-nowrap tracking-wide">
+                Track ID
+            </button>
+        </div>
+
+        <div id="msg" class="text-center text-xs sm:text-sm font-medium mb-5 px-1 min-h-[18px]"></div>
+
+        <div class="border-b border-slate-100 pb-2.5 mb-5 flex justify-between items-center">
+            <span id="timelineHeader" class="text-[10px] sm:text-xs font-bold tracking-wider text-slate-400 uppercase">Application Stages</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        </div>
+
+        <div class="relative space-y-5 sm:space-y-6 before:content-[''] before:absolute before:left-[13px] sm:before:left-[15px] before:top-2.5 before:bottom-2.5 before:w-[2px] before:bg-slate-100">
+            
+            <div class="step-faded flex items-start gap-3 sm:gap-4 transition-all duration-300" id="step1">
+                <span class="num-circle shrink-0 z-10 w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-slate-200 bg-slate-50 text-slate-400 text-[10px] sm:text-xs font-bold flex items-center justify-center transition-all duration-300">1</span>
+                <div class="flex-1">
+                    <h4 class="text-sm sm:text-base font-semibold mb-0.5 tracking-tight">Initial Case Review</h4>
+                    <p class="text-[11px] sm:text-sm leading-relaxed mb-1">Your profile evaluation and initial case review is underway.</p>
+                    <span class="completed-tag hidden items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100"><i class="fa-solid fa-circle-check"></i> Completed</span>
+                </div>
+            </div>
+
+            <div class="step-faded flex items-start gap-3 sm:gap-4 transition-all duration-300" id="step2">
+                <span class="num-circle shrink-0 z-10 w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-slate-200 bg-slate-50 text-slate-400 text-[10px] sm:text-xs font-bold flex items-center justify-center transition-all duration-300">2</span>
+                <div class="flex-1">
+                    <h4 class="text-sm sm:text-base font-semibold mb-0.5 tracking-tight">Document Submission</h4>
+                    <p class="text-[11px] sm:text-sm leading-relaxed mb-1">All required documents have been successfully compiled and checked.</p>
+                    <span class="completed-tag hidden items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100"><i class="fa-solid fa-circle-check"></i> Completed</span>
+                </div>
+            </div>
+
+            <div class="step-faded flex items-start gap-3 sm:gap-4 transition-all duration-300" id="step3">
+                <span class="num-circle shrink-0 z-10 w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-slate-200 bg-slate-50 text-slate-400 text-[10px] sm:text-xs font-bold flex items-center justify-center transition-all duration-300">3</span>
+                <div class="flex-1">
+                    <h4 class="text-sm sm:text-base font-semibold mb-0.5 tracking-tight">Fee Submission – Fee Confirmed</h4>
+                    <p class="text-[11px] sm:text-sm leading-relaxed mb-1">Your payment has been cleared and verification receipt generated.</p>
+                    <span class="completed-tag hidden items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100"><i class="fa-solid fa-circle-check"></i> Completed</span>
+                </div>
+            </div>
+
+            <div class="step-faded flex items-start gap-3 sm:gap-4 transition-all duration-300" id="step4">
+                <span class="num-circle shrink-0 z-10 w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-slate-200 bg-slate-50 text-slate-400 text-[10px] sm:text-xs font-bold flex items-center justify-center transition-all duration-300">4</span>
+                <div class="flex-1">
+                    <h4 class="text-sm sm:text-base font-semibold mb-0.5 tracking-tight">Embassy / Immigration Review</h4>
+                    <p class="text-[11px] sm:text-sm leading-relaxed mb-1">Application is securely processing under official embassy guidelines.</p>
+                    <span class="completed-tag hidden items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100"><i class="fa-solid fa-circle-check"></i> Completed</span>
+                </div>
+            </div>
+
+            <div class="step-faded flex items-start gap-3 sm:gap-4 transition-all duration-300" id="step5">
+                <span class="num-circle shrink-0 z-10 w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-slate-200 bg-slate-50 text-slate-400 text-[10px] sm:text-xs font-bold flex items-center justify-center transition-all duration-300">5</span>
+                <div class="flex-1">
+                    <h4 class="text-sm sm:text-base font-semibold mb-0.5 tracking-tight">Visa Stamp & Dispatch</h4>
+                    <p class="text-[11px] sm:text-sm leading-relaxed mb-1">Final updates on your passport courier delivery tracking information.</p>
+                    <span class="completed-tag hidden items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100"><i class="fa-solid fa-circle-check"></i> Completed</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+<script>
+function trackVisa() {
+    const id = document.getElementById('visaId').value.trim();
+    const msg = document.getElementById('msg');
+    const timelineHeader = document.getElementById('timelineHeader');
+    
+    if(!id) {
+        msg.className = "text-center text-xs sm:text-sm font-semibold text-red-600 mb-5 bg-red-50/80 py-2 px-3 rounded-xl border border-red-100/50";
+        msg.innerHTML = "Please enter your Tracking ID!";
+        return;
+    }
+    
+    msg.className = "text-center text-xs sm:text-sm font-semibold text-blue-800 mb-5 bg-blue-50/60 py-2 px-3 rounded-xl border border-blue-100/50";
+    msg.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Fetching records...';
+    
+    // Reset all steps to baseline faded flex layout
+    for(let i = 1; i <= 5; i++) {
+        let el = document.getElementById(`step${i}`);
+        el.className = "step-faded flex items-start gap-3 sm:gap-4 transition-all duration-300";
+    }
+
+    const webAppUrl = "https://script.google.com/macros/s/AKfycbwRS74xWfnYK-5tPEUosxFkRl9rDReHfyIVSiZwoUli-888EAXVW6OquQMA2tNpu7C0qA/exec"; 
+    
+    fetch(`${webAppUrl}?id=${id}`)
+    .then(res => res.json())
+    .then(data => {
+        if(data.success) {
+            msg.className = "text-center text-xs sm:text-sm font-semibold text-emerald-600 mb-5 bg-emerald-50/80 py-2 px-3 rounded-xl border border-emerald-100/50";
+            msg.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> Welcome back, <strong>${data.name}</strong>!`;
+            timelineHeader.innerHTML = `${data.name}'s Application Journey`;
+            
+            let currentStepNum = data.statusNum; 
+
+            // Live Class Engine Application
+            for(let i = 1; i <= 5; i++) {
+                let stepDiv = document.getElementById(`step${i}`);
+                if(i < currentStepNum) {
+                    stepDiv.className = "step-completed flex items-start gap-3 sm:gap-4 transition-all duration-300";
+                } else if(i === currentStepNum) {
+                    stepDiv.className = "step-active flex items-start gap-3 sm:gap-4 transition-all duration-300";
+                }
+            }
+        } else {
+            msg.className = "text-center text-xs sm:text-sm font-semibold text-red-600 mb-5 bg-red-50/80 py-2 px-3 rounded-xl border border-red-100/50";
+            msg.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-1"></i> Record not found!';
+            timelineHeader.innerHTML = "Application Progress";
+        }
+    })
+    .catch(err => {
+        msg.className = "text-center text-xs sm:text-sm font-semibold text-red-600 mb-5 bg-red-50/80 py-2 px-3 rounded-xl border border-red-100/50";
+        msg.innerHTML = "Please check your network settings.";
+    });
+}
+</script>
+
+</body>
+</html>

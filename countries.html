@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="NorthGate Visa Service Center - Select your visa destination from our worldwide coverage including USA, Canada, Schengen, UK, Australia and more.">
+    <meta name="keywords" content="visa destinations, countries for visa, USA visa, Canada visa, Schengen visa, UK visa, Australia visa">
+    <meta name="author" content="NorthGate Visa Service Center">
+    <meta name="robots" content="index, follow">
+    <title>NorthGate Visa | Countries & Destinations</title>
+    
+    <link rel="icon" type="image/webp" href="favicon.webp">
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <link rel="shortcut icon" href="favicon.webp">
+    <link rel="canonical" href="https://northgatevisa.com/countries.html">
+    
+    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="dns-prefetch" href="https://flagcdn.com">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://flagcdn.com" crossorigin>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:wght@700;800&display=swap');
+        
+        :root {
+            --primary-red: #8b0000;
+            --primary-blue: #000000; 
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            scroll-behavior: smooth;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9eef5 100%);
+            min-height: 100vh;
+        }
+        
+        /* Prevent body scroll when mobile menu is open */
+        body.menu-open {
+            overflow: hidden;
+        }
+        
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .animated-bg::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            top: -25%;
+            left: -25%;
+            background: radial-gradient(circle at 20% 30%, rgba(225, 29, 63, 0.03) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.03) 0%, transparent 50%);
+            animation: slowDrift 30s ease-in-out infinite;
+        }
+        
+        @keyframes slowDrift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(2%, 1%) rotate(1deg); }
+        }
+        
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.4;
+            animation: floatOrb 20s infinite ease-in-out;
+        }
+        
+        @keyframes floatOrb {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-30px) translateX(30px); }
+        }
+        
+        .bg-logo-fixed {
+            position: fixed;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 65%;
+            max-width: 500px;
+            opacity: 0.08;
+            z-index: 0;
+            pointer-events: none;
+            user-select: none;
+            object-fit: contain;
+        }
+        
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            background: transparent;
+        }
+        
+        section {
+            background: transparent !important;
+            position: relative;
+        }
+        
+        .flag-card {
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            cursor: pointer;
+            border-radius: 0px !important;
+            background: rgba(250, 240, 255, 0.85);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(200, 170, 210, 0.3);
+        }
+        
+        .flag-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 30px -12px rgba(180, 140, 200, 0.15);
+            border-color: #d8b4fe !important;
+            background: rgba(255, 248, 255, 0.95);
+        }
+        
+        .flag-img {
+            width: 100%;
+            max-width: 100px;
+            height: 70px;
+            object-fit: contain !important;
+            border-radius: 4px !important;
+            margin: 0 auto 8px auto !important;
+            background: transparent;
+            display: block;
+            border: none;
+            box-shadow: none !important;
+        }
+        
+        .schengen-flag {
+            width: 100%;
+            max-width: 95px;
+            height: 65px;
+            object-fit: contain !important;
+            border-radius: 4px !important;
+            margin: 0 auto 6px auto !important;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: transparent;
+            display: block;
+            border: none;
+            box-shadow: none !important;
+        }
+        
+        .schengen-flag:hover {
+            transform: scale(1.05);
+        }
+        
+        .schengen-country {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            padding: 18px 12px;
+            border-radius: 0px !important;
+            background: rgba(250, 240, 255, 0.85);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(200, 170, 210, 0.3);
+        }
+        
+        .schengen-country:hover {
+            transform: translateY(-6px);
+            background: rgba(255, 248, 255, 0.95);
+            box-shadow: 0 16px 28px -10px rgba(0,0,0,0.12);
+            border-color: #d8b4fe !important;
+        }
+        
+        .flag-card span, .schengen-country span {
+            margin-top: 2px !important;
+            margin-bottom: 0 !important;
+        }
+        
+        .heading-font {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .nav-link {
+            position: relative;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2.5px;
+            bottom: -6px;
+            left: 0;
+            background: linear-gradient(90deg, #e11d3f, #3b82f6);
+            border-radius: 4px;
+            transition: width 0.25s ease;
+        }
+        
+        .nav-link:hover:after {
+            width: 100%;
+        }
+        
+        .schengen-section {
+            display: none;
+        }
+        
+        .schengen-section.visible {
+            display: block;
+        }
+        
+        @media (max-width: 640px) {
+            .flag-img { 
+                max-width: 65px !important; 
+                height: 48px !important; 
+                margin-bottom: 6px !important; 
+            }
+            .schengen-flag { 
+                max-width: 65px !important; 
+                height: 48px !important; 
+                margin-bottom: 6px !important; 
+            }
+            .flag-card { 
+                padding: 10px 4px !important; 
+            }
+            .schengen-country { 
+                padding: 10px 4px !important; 
+            }
+            .flag-card span, .schengen-country span { 
+                font-size: 10px !important; 
+                font-weight: 600 !important; 
+                margin-top: 2px !important; 
+            }
+            .bg-logo-fixed { 
+                width: 80%; 
+                max-width: 350px; 
+                opacity: 0.08; 
+                top: 55%; 
+            }
+            
+            .worldwide-grid, .schengen-grid {
+                display: grid !important;
+                grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+                gap: 0.75rem !important;
+            }
+            
+            .max-w-7xl {
+                padding-left: 0.75rem !important;
+                padding-right: 0.75rem !important;
+            }
+            
+            .quick-links-grid {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 0.5rem 1rem !important;
+            }
+            .quick-links-grid li {
+                list-style: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .quick-links-grid a {
+                padding: 0.25rem 0 !important;
+                background: transparent !important;
+                border: none !important;
+                display: flex !important;
+                align-items: center !important;
+                gap: 0.5rem !important;
+            }
+        }
+        
+        @media (min-width: 641px) and (max-width: 768px) {
+            .flag-img { max-width: 80px !important; height: 58px !important; margin-bottom: 6px !important; }
+            .schengen-flag { max-width: 75px !important; height: 52px !important; margin-bottom: 5px !important; }
+            .flag-card { padding: 14px 10px !important; }
+            .schengen-country { padding: 14px 10px !important; }
+            .bg-logo-fixed { width: 60%; opacity: 0.08; top: 55%; }
+        }
+        
+        @media (min-width: 769px) {
+            .flag-img { max-width: 100px; height: 70px; margin-bottom: 8px !important; }
+            .schengen-flag { max-width: 95px; height: 65px; margin-bottom: 6px !important; }
+            .flag-card { padding: 22px 14px; }
+            .schengen-country { padding: 20px 14px; }
+            .bg-logo-fixed { width: 45%; opacity: 0.08; top: 55%; }
+        }
+        
+        nav, footer {
+            position: relative;
+            z-index: 20;
+        }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #8b0000; border-radius: 4px; }
+        
+        .rounded-xl, .rounded-2xl, .rounded-3xl, .rounded-full { border-radius: 0px !important; }
+        .rounded-full.bg-white { border-radius: 50% !important; }
+        .bg-green-600 { border-radius: 9999px !important; }
+        .text-center span, .text-center h2, .text-center p { position: relative; z-index: 2; }
+        .text-center span.bg-gradient-to-r { background: linear-gradient(to right, #fee2e2, #dbeafe) !important; padding: 4px 16px; }
+        h2.bg-gradient-to-r {
+            background: linear-gradient(135deg, #1e293b, #475569) !important;
+            -webkit-background-clip: text !important;
+            background-clip: text !important;
+            color: transparent !important;
+        }
+        
+        .highlight-pulse {
+            animation: pulse 1s ease-in-out;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(200, 162, 230, 0.3); }
+            50% { box-shadow: 0 0 0 20px rgba(200, 162, 230, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="animated-bg">
+        <div class="orb" style="width: 300px; height: 300px; background: #e11d3f; top: 10%; left: -100px; animation-delay: 0s;"></div>
+        <div class="orb" style="width: 400px; height: 400px; background: #3b82f6; bottom: 10%; right: -100px; animation-delay: 5s;"></div>
+        <div class="orb" style="width: 200px; height: 200px; background: #f59e0b; top: 50%; left: 50%; animation-delay: 10s;"></div>
+    </div>
+    <img src="favicon.webp" class="bg-logo-fixed" alt="NorthGate Background Logo" width="500" height="500" loading="eager" onerror="this.style.display='none'">
+
+    <div class="content-wrapper">
+
+        <!-- NAVBAR - Same as index.html -->
+        <nav class="bg-white/95 backdrop-blur-md border-b border-red-200 sticky top-0 z-50 shadow-sm">
+            <div class="max-w-7xl mx-auto px-5 lg:px-8">
+                <div class="flex justify-between items-center py-3 md:py-4">
+                    <div class="flex items-center gap-3">
+                        <img src="logo.webp" alt="NorthGate Visa Service Center Logo" class="h-12 w-auto object-contain" width="48" height="48" loading="eager" onerror="this.onerror=null; this.src='https://placehold.co/60x60/e11d3f/white?text=NG'">
+                        <div>
+                            <h1 class="text-2xl md:text-3xl font-bold heading-font bg-gradient-to-r from-red-600 to-blue-700 bg-clip-text text-transparent">NorthGate</h1>
+                            <p class="text-[9px] md:text-[10px] text-gray-500 -mt-0.5 font-semibold tracking-wide">Visa Service Center</p>
+                        </div>
+                    </div>
+
+                    <div class="hidden md:flex items-center gap-6 text-sm font-semibold text-gray-700">
+                        <a href="index.html" class="nav-link hover:text-red-600">HOME</a>
+                        <a href="index.html#services" class="nav-link hover:text-red-600">SERVICES</a>
+                        <a href="countries.html" class="nav-link hover:text-red-600 text-red-600">COUNTRIES</a>
+                        <a href="index.html#why" class="nav-link hover:text-red-600">WHY US</a>
+                        <a href="index.html#apply" class="nav-link hover:text-red-600">APPLY</a>
+                        <a href="index.html#faq" class="nav-link hover:text-red-600">FAQ</a>
+                        <a href="about.html" class="nav-link hover:text-red-600">ABOUT</a>
+                        <a href="terms.html" class="nav-link hover:text-red-600">TERMS</a>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <div id="authSlot"></div>
+                        <a href="https://wa.me/923452613587" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white text-sm font-bold px-4 py-2.5 rounded-full shadow-md transition-all">
+                            <i class="fab fa-whatsapp text-lg"></i>
+                            <span class="hidden sm:inline">WhatsApp</span>
+                        </a>
+                        <button onclick="toggleMobileMenu()" class="md:hidden text-3xl text-red-600 focus:outline-none">
+                            <i class="fa-solid fa-bars"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+             <!-- Mobile Menu -->
+      <div id="mobileMenu" class="hidden md:hidden absolute left-0 right-0 top-full z-50 bg-white border-b border-gray-200 px-4 py-3 shadow-xl max-h-[70vh] overflow-y-auto">
+                <div id="authSlotMobile"></div>
+        <div class="flex flex-col gap-1 text-base font-semibold">
+          <!-- HOME link: no red background, just hover -->
+          <a href="index.html" onclick="closeMobileMenu()" class="py-2 px-3 rounded-xl hover:bg-red-50 flex items-center gap-2 text-sm"><i class="fa-solid fa-house text-red-500 w-4"></i> HOME</a>
+          <a href="index.html#services" onclick="closeMobileMenu()" class="py-2 px-3 rounded-xl hover:bg-red-50 flex items-center gap-2 text-sm"><i class="fa-solid fa-briefcase text-red-500 w-4"></i> SERVICES</a>
+          <a href="countries.html" onclick="closeMobileMenu()" class="py-2 px-3 rounded-xl bg-red-50 text-red-600 flex items-center gap-2 text-sm"><i class="fa-solid fa-globe text-red-500 w-4"></i> COUNTRIES</a>
+          <a href="index.html#why" onclick="closeMobileMenu()" class="py-2 px-3 rounded-xl hover:bg-red-50 flex items-center gap-2 text-sm"><i class="fa-solid fa-star text-red-500 w-4"></i> WHY US</a>
+          <a href="index.html#apply" onclick="closeMobileMenu()" class="py-2 px-3 rounded-xl hover:bg-red-50 flex items-center gap-2 text-sm"><i class="fa-solid fa-file-pen text-red-500 w-4"></i> APPLY</a>
+          <a href="index.html#faq" onclick="closeMobileMenu()" class="py-2 px-3 rounded-xl hover:bg-red-50 flex items-center gap-2 text-sm"><i class="fa-solid fa-question-circle text-red-500 w-4"></i> FAQ</a>
+          <a href="about.html" onclick="closeMobileMenu()" class="py-2 px-3 rounded-xl hover:bg-red-50 flex items-center gap-2 text-sm"><i class="fa-solid fa-building text-red-500 w-4"></i> ABOUT US</a>
+          <a href="terms.html" onclick="closeMobileMenu()" class="py-2 px-3 rounded-xl hover:bg-red-50 flex items-center gap-2 text-sm"><i class="fa-solid fa-scale-balanced text-red-500 w-4"></i> TERMS</a>
+          <a href="index.html#testimonials" onclick="closeMobileMenu()" class="py-2 px-3 rounded-xl hover:bg-red-50 flex items-center gap-2 text-sm"><i class="fa-solid fa-comment-dots text-red-500 w-4"></i> REVIEWS</a>
+          <a href="student-visa.html" onclick="closeMobileMenu()" class="py-2 px-3 rounded-xl hover:bg-red-50 flex items-center gap-2 text-sm"><i class="fa-solid fa-user-graduate text-red-500 w-4"></i> STUDENT VISA</a>
+          <a href="Tracker.html" onclick="closeMobileMenu()" class="py-2 px-3 rounded-xl hover:bg-red-50 flex items-center gap-2 text-sm"> <i class="fa-solid fa-list-check text-red-500 text-base flex-shrink-0"></i>TRACK YOUR APPLICATION</a>
+        </div>
+      </div>
+        </nav>
+
+        <!-- WORLDWIDE COUNTRIES SECTION -->
+        <section class="py-12 sm:py-16 md:py-20 min-h-screen">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-8 sm:mb-12">
+                    <span class="bg-gradient-to-r from-red-100 to-blue-100 text-red-700 px-4 sm:px-5 py-1 text-xs sm:text-sm font-bold inline-block shadow-sm" style="border-radius: 0px;">🌍 WORLDWIDE COVERAGE</span>
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold heading-font mt-3 sm:mt-4 bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">Select Your Destination</h2>
+                    <p class="text-gray-600 mt-2 text-sm sm:text-base bg-white/50 inline-block px-3 py-1">Click on any country to fill the application</p>
+                </div>
+                
+                <div class="worldwide-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 md:gap-6">
+                    <div onclick="openFormLink('usa')" class="flag-card border p-4 sm:p-5 text-center shadow-sm">
+                        <img src="https://flagcdn.com/w320/us.webp" class="flag-img" alt="USA Flag" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800">U.S</span>
+                    </div>
+                    <div onclick="openFormLink('canada')" class="flag-card border p-4 sm:p-5 text-center shadow-sm">
+                        <img src="https://flagcdn.com/w320/ca.webp" class="flag-img" alt="Canada Flag" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800">Canada</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="flag-card border p-4 sm:p-5 text-center shadow-sm">
+                        <img src="https://flagcdn.com/w320/gb.webp" class="flag-img" alt="UK Flag" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800">UK</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="flag-card border p-4 sm:p-5 text-center shadow-sm">
+                        <img src="https://flagcdn.com/w320/my.webp" class="flag-img" alt="Malaysia Flag" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800">Malaysia</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="flag-card border p-4 sm:p-5 text-center shadow-sm">
+                        <img src="https://flagcdn.com/w320/sg.webp" class="flag-img" alt="Singapore Flag" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800">Singapore</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="flag-card border p-4 sm:p-5 text-center shadow-sm">
+                        <img src="https://flagcdn.com/w320/th.webp" class="flag-img" alt="Thailand Flag" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800">Thailand</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="flag-card border p-4 sm:p-5 text-center shadow-sm">
+                        <img src="https://flagcdn.com/w320/ae.webp" class="flag-img" alt="UAE Flag" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800">UAE</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="flag-card border p-4 sm:p-5 text-center shadow-sm">
+                        <img src="https://flagcdn.com/w320/qa.webp" class="flag-img" alt="Qatar Flag" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800">Qatar</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="flag-card border p-4 sm:p-5 text-center shadow-sm">
+                        <img src="https://flagcdn.com/w320/sa.webp" class="flag-img" alt="Saudi Arabia Flag" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800">Saudi Arabia</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="flag-card border p-4 sm:p-5 text-center shadow-sm">
+                        <img src="https://flagcdn.com/w320/om.webp" class="flag-img" alt="Oman Flag" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800">Oman</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="flag-card border p-4 sm:p-5 text-center shadow-sm">
+                        <img src="https://flagcdn.com/w320/au.webp" class="flag-img" alt="Australia Flag" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800">Australia</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="flag-card border p-4 sm:p-5 text-center shadow-sm">
+                        <img src="https://flagcdn.com/w320/ph.webp" class="flag-img" alt="Philippines Flag" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800">Philippines</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="flag-card border p-4 sm:p-5 text-center shadow-sm">
+                        <img src="https://flagcdn.com/w320/mv.webp" class="flag-img" alt="Maldives Flag" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800">Maldives</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="flag-card border p-4 sm:p-5 text-center shadow-sm">
+                        <img src="https://flagcdn.com/w320/id.webp" class="flag-img" alt="Indonesia Flag" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800">Indonesia</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="flag-card border p-4 sm:p-5 text-center shadow-sm">
+                        <img src="https://flagcdn.com/w320/az.webp" class="flag-img" alt="Azerbaijan Flag" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800">Azerbaijan</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="flag-card border p-4 sm:p-5 text-center shadow-sm">
+                        <img src="https://flagcdn.com/w320/tr.webp" class="flag-img" alt="Turkey Flag" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800">Turkey</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="flag-card border p-4 sm:p-5 text-center shadow-sm">
+                        <img src="https://flagcdn.com/w320/lk.webp" class="flag-img" alt="Sri Lanka Flag" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800">Sri Lanka</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="flag-card border p-4 sm:p-5 text-center shadow-sm">
+                        <img src="https://flagcdn.com/w320/ir.webp" class="flag-img" alt="Iran Flag" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800">Iran</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="flag-card border p-4 sm:p-5 text-center shadow-sm">
+                        <img src="https://flagcdn.com/w320/cn.webp" class="flag-img" alt="China Flag" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800">China</span>
+                    </div>
+                    <div onclick="showSchengenSection(event)" class="flag-card border p-4 sm:p-5 text-center shadow-sm schengen-trigger">
+                        <img src="https://flagcdn.com/w320/eu.webp" class="flag-img" alt="Schengen Flag" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800">Schengen</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="flag-card border p-4 sm:p-5 text-center shadow-sm">
+                        <img src="https://flagcdn.com/w320/by.webp" class="flag-img" alt="Belarus Flag" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800">Belarus</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCHENGEN SECTION -->
+        <section id="schengenSection" class="schengen-section py-12 sm:py-16 md:py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-8 sm:mb-10">
+                    <span class="bg-gradient-to-r from-blue-100 to-red-100 text-blue-700 px-4 sm:px-5 py-1 text-xs sm:text-sm font-bold inline-block shadow-sm" style="border-radius: 0px;">🇪🇺 SCHENGEN AREA</span>
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold heading-font mt-3 sm:mt-4 bg-gradient-to-r from-blue-800 to-red-700 bg-clip-text text-transparent">EU-Schengen Countries</h2>
+                    <p class="text-gray-600 mt-2 text-sm sm:text-base bg-white/50 inline-block px-3 py-1">Click on any Schengen country to fill the application</p>
+                </div>
+                
+                <div class="schengen-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5 md:gap-6">
+                    <div onclick="openFormLink('italy')" class="schengen-country border">
+                        <img src="https://flagcdn.com/w320/it.webp" class="schengen-flag mx-auto" alt="Italy" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800 block">Italy</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="schengen-country border">
+                        <img src="https://flagcdn.com/w320/gr.webp" class="schengen-flag mx-auto" alt="Greece" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800 block">Greece</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="schengen-country border">
+                        <img src="https://flagcdn.com/w320/de.webp" class="schengen-flag mx-auto" alt="Germany" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800 block">Germany</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="schengen-country border">
+                        <img src="https://flagcdn.com/w320/nl.webp" class="schengen-flag mx-auto" alt="Netherlands" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800 block">Netherlands</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="schengen-country border">
+                        <img src="https://flagcdn.com/w320/mt.webp" class="schengen-flag mx-auto" alt="Malta" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800 block">Malta</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="schengen-country border">
+                        <img src="https://flagcdn.com/w320/fr.webp" class="schengen-flag mx-auto" alt="France" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800 block">France</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="schengen-country border">
+                        <img src="https://flagcdn.com/w320/es.webp" class="schengen-flag mx-auto" alt="Spain" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800 block">Spain</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="schengen-country border">
+                        <img src="https://flagcdn.com/w320/ch.webp" class="schengen-flag mx-auto" alt="Switzerland" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800 block">Switzerland</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="schengen-country border">
+                        <img src="https://flagcdn.com/w320/fi.webp" class="schengen-flag mx-auto" alt="Finland" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800 block">Finland</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="schengen-country border">
+                        <img src="https://flagcdn.com/w320/be.webp" class="schengen-flag mx-auto" alt="Belgium" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800 block">Belgium</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="schengen-country border">
+                        <img src="https://flagcdn.com/w320/pt.webp" class="schengen-flag mx-auto" alt="Portugal" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800 block">Portugal</span>
+                    </div>
+                    <div onclick="openFormLink('other')" class="schengen-country border">
+                        <img src="https://flagcdn.com/w320/no.webp" class="schengen-flag mx-auto" alt="Norway" loading="eager">
+                        <span class="text-sm sm:text-base font-semibold text-gray-800 block">Norway</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="relative overflow-hidden bg-gradient-to-br from-gray-900 via-blue-950 to-gray-900 text-white py-12">
+            <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-red-500/50 to-transparent"></div>
+            <div class="absolute -top-24 -right-24 w-64 h-64 bg-red-600/10 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl"></div>
+
+            <div class="max-w-7xl mx-auto px-5 relative z-10 grid md:grid-cols-4 gap-10">
+                <div class="space-y-4">
+                    <div class="group relative h-20 w-20">
+                        <div class="absolute inset-0 bg-white/20 rounded-full blur-md group-hover:blur-lg transition-all"></div>
+                        <div class="relative h-20 w-20 rounded-full bg-white flex items-center justify-center shadow-xl border border-white/10 overflow-hidden">
+                            <img src="logo.webp" class="h-full w-full object-contain p-2 transition-transform duration-500 group-hover:scale-110" alt="NorthGate Logo" width="80" height="80" loading="eager" onerror="this.src='https://placehold.co/80x80/e11d3f/white?text=NG'">
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold tracking-tight">NorthGate</h3>
+                    <p class="text-sm text-red-200 font-medium">Visa Service Center</p>
+                    <p class="text-xs opacity-70 border-l-2 border-red-500 pl-3 py-1">Independent • Ethical • Transparent</p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-6 text-lg inline-block border-b border-red-500/30 pb-1">Quick Links</h4>
+                    <ul class="quick-links-grid space-y-3 text-sm md:space-y-3 md:block">
+                        <li><a href="about.html" class="flex items-center group hover:text-red-300 transition-all"><span class="w-0 group-hover:w-4 transition-all duration-300 overflow-hidden text-red-400">→</span> About</a></li>
+                        <li><a href="index.html#faq" class="flex items-center group hover:text-red-300 transition-all"><span class="w-0 group-hover:w-4 transition-all duration-300 overflow-hidden text-red-400">→</span> FAQ</a></li>
+                        <li><a href="index.html#apply" class="flex items-center group hover:text-red-300 transition-all"><span class="w-0 group-hover:w-4 transition-all duration-300 overflow-hidden text-red-400">→</span> Apply</a></li>
+                        <li><a href="terms.html" class="flex items-center group hover:text-red-300 transition-all"><span class="w-0 group-hover:w-4 transition-all duration-300 overflow-hidden text-red-400">→</span> Terms</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-6 text-lg inline-block border-b border-red-500/30 pb-1">Contact</h4>
+                    <div class="space-y-4">
+                        <a href="https://wa.me/923452613587" target="_blank" class="flex items-center gap-3 group hover:text-green-400 transition-colors">
+                            <span class="bg-white/5 p-2 rounded-lg group-hover:bg-green-500/20 border border-white/5 transition-all text-green-400"><i class="fab fa-whatsapp"></i></span>
+                            <span class="text-sm">+92 345 2613587</span>
+                        </a>
+                        <a href="mailto:support@northgatevisaservices.com" class="flex items-center gap-3 group hover:text-red-300 transition-colors">
+                            <span class="bg-white/5 p-2 rounded-lg group-hover:bg-red-500/20 border border-white/5 transition-all text-red-400"><i class="fa-regular fa-envelope"></i></span>
+                            <span class="text-sm">support@northgatevisaservices.com</span>
+                        </a>
+                        <div class="flex items-center gap-3 opacity-80 pt-2">
+                            <span class="bg-white/5 p-2 rounded-lg border border-white/5"><i class="fa-regular fa-clock"></i></span>
+                            <span class="text-sm">Mon-Sat: 9AM - 7PM</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center text-[10px] uppercase tracking-[2px] text-red-200/60 border-t border-white/10 mt-12 pt-8">
+                © 2026 NorthGate Visa Service Center. All Rights Reserved.
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        function showSchengenSection(event) {
+            event.stopPropagation();
+            const schengenSection = document.getElementById('schengenSection');
+            if (schengenSection) {
+                schengenSection.classList.add('visible');
+                setTimeout(() => {
+                    schengenSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+                const triggerCard = document.querySelector('.schengen-trigger');
+                if (triggerCard) {
+                    triggerCard.classList.add('highlight-pulse');
+                    setTimeout(() => triggerCard.classList.remove('highlight-pulse'), 1000);
+                }
+            }
+        }
+        
+        function openFormLink(type) {
+            if(type === 'usa') {
+                window.open('https://northgatevisaservicecenter.github.io/U.S_Form/', '_blank');
+            } else if(type === 'canada') {
+                window.open('https://northgatevisaservicecenter.github.io/Canada_form/', '_blank');
+            } else if(type === 'italy') {
+                window.open('https://northgatevisaservicecenter.github.io/Italy_form/', '_blank');
+            } else {
+                window.open('https://northgatevisaservicecenter.github.io/visa_form/', '_blank');
+            }
+        }
+        
+        function toggleMobileMenu() { 
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+            if (!menu.classList.contains('hidden')) {
+                document.body.classList.add('menu-open');
+            } else {
+                document.body.classList.remove('menu-open');
+            }
+        }
+        
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.add('hidden');
+            document.body.classList.remove('menu-open');
+        }
+        
+        window.addEventListener('resize', function() {
+            if(window.innerWidth >= 768) {
+                const menu = document.getElementById('mobileMenu');
+                if(menu && !menu.classList.contains('hidden')) {
+                    menu.classList.add('hidden');
+                    document.body.classList.remove('menu-open');
+                }
+            }
+        });
+    </script>
+    <script src="chat-widget.js"></script>
+    <script src="auth.js"></script>
+</body>
+</html>
