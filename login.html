@@ -9,6 +9,7 @@
     <link rel="icon" type="image/webp" href="favicon.webp">
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -196,7 +197,8 @@
             <div class="flex-1 h-px bg-slate-200"></div>
         </div>
 
-        <button onclick="handleGoogleSignIn()" id="googleBtn" class="google-btn w-full flex items-center justify-center gap-3 bg-white border-2 border-slate-200 text-slate-700 font-bold py-3 rounded-xl text-sm shadow-sm">
+        <div id="gsiButtonContainer" class="flex justify-center min-h-[44px]"></div>
+        <button onclick="handleGoogleSignIn()" id="googleBtn" class="google-btn hidden w-full flex items-center justify-center gap-3 bg-white border-2 border-slate-200 text-slate-700 font-bold py-3 rounded-xl text-sm shadow-sm">
             <i class="fa-brands fa-google text-red-500"></i>
             Continue with Google
         </button>
@@ -234,9 +236,10 @@
                 'auth/weak-password': 'Password should be at least 6 characters.',
                 'auth/too-many-requests': 'Too many attempts. Please try again later.',
                 'auth/network-request-failed': 'Network error. Please check your connection.',
-                'auth/unauthorized-domain': 'This domain is not authorized for sign-in yet.'
+                'auth/unauthorized-domain': 'This domain is not authorized for sign-in yet.',
+                'auth/operation-not-allowed': 'Email/Password sign-in is not enabled yet. Please enable it in Firebase Console → Authentication → Sign-in method.'
             };
-            return map[error.code] || 'Something went wrong. Please try again.';
+            return map[error.code] || ('Something went wrong (' + (error.code || 'unknown') + '). Please try again.');
         }
 
         function redirectAfterAuth() {
@@ -311,6 +314,60 @@
             showMsg('');
             signInWithGoogle();
         }
+
+        // ---- Google Identity Services (GSI) — more reliable on mobile ----
+        const GSI_CLIENT_ID = "677518711425-lv9iaj25uqh26ba1alcg1lsibeg30kse.apps.googleusercontent.com";
+
+        function handleGsiCredentialResponse(response) {
+            showMsg('Signing you in…');
+            const credential = firebase.auth.GoogleAuthProvider.credential(response.credential);
+            auth.signInWithCredential(credential)
+                .then(() => { showMsg('Signed in successfully. Redirecting…', 'success'); setTimeout(redirectAfterAuth, 500); })
+                .catch((error) => { showMsg(friendlyError(error), 'error'); });
+        }
+
+        function initGoogleButton() {
+            const container = document.getElementById('gsiButtonContainer');
+            try {
+                if (window.google && window.google.accounts && window.google.accounts.id) {
+                    google.accounts.id.initialize({
+                        client_id: GSI_CLIENT_ID,
+                        callback: handleGsiCredentialResponse,
+                        auto_select: false
+                    });
+
+                    // Measure the card itself (not the empty button container) for a safe width
+                    const wrapper = document.querySelector('.content-wrapper');
+                    const wrapperWidth = wrapper ? wrapper.offsetWidth : 320;
+                    const horizontalPadding = window.innerWidth < 640 ? 40 : 72;
+                    const btnWidth = Math.max(220, Math.min(wrapperWidth - horizontalPadding, 360));
+
+                    google.accounts.id.renderButton(container, {
+                        theme: "outline",
+                        size: "large",
+                        shape: "pill",
+                        text: "continue_with",
+                        width: btnWidth
+                    });
+
+                    // Safety net: if nothing actually got drawn inside, show the fallback button
+                    setTimeout(() => {
+                        if (!container.querySelector('iframe') && !container.querySelector('div[role="button"]')) {
+                            container.classList.add('hidden');
+                            document.getElementById('googleBtn').classList.remove('hidden');
+                        }
+                    }, 1500);
+                } else {
+                    throw new Error('GSI not available');
+                }
+            } catch (e) {
+                console.error('Google button init failed:', e);
+                container.classList.add('hidden');
+                document.getElementById('googleBtn').classList.remove('hidden');
+            }
+        }
+
+        window.addEventListener('load', initGoogleButton);
 
         // If already signed in, skip the form and go straight back
         auth.onAuthStateChanged((user) => {
