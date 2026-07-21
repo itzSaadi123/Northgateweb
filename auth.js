@@ -1,142 +1,359 @@
-/* ============================================================
-   NorthGate Visa Service Center — Google Sign-In (Firebase Auth)
-   ============================================================
-   SETUP STEPS (one-time, takes ~5 minutes):
-   1. Go to https://console.firebase.google.com and create a free project.
-   2. In the project, go to Build > Authentication > Get Started >
-      Sign-in method > enable "Google".
-   3. Go to Project Settings (gear icon) > General > scroll to
-      "Your apps" > click the Web icon (</>) > register the app.
-   4. Firebase will show you a firebaseConfig object. Copy those
-      values into the firebaseConfig object below.
-   5. Still in Authentication > Settings > Authorized domains,
-      add your live domain, e.g. northgatevisaservices.com
-      (localhost is already allowed by default for testing).
-   That's it — every page that includes this file will get a
-   working "Sign in with Google" button automatically.
-   ============================================================ */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Sign in to your NorthGate Visa Service Center account.">
+    <title>Sign In | NorthGate Visa Service Center</title>
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBLNOJ4KA9ingOLJXBpyEOF6auIoBpTHbs",
-  authDomain: "northgate-7904b.firebaseapp.com",
-  projectId: "northgate-7904b",
-  storageBucket: "northgate-7904b.firebasestorage.app",
-  messagingSenderId: "677518711425",
-  appId: "1:677518711425:web:c400e633bd3117a65d4b80"
-};
+    <link rel="icon" type="image/webp" href="favicon.webp">
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const googleProvider = new firebase.auth.GoogleAuthProvider();
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-function isMobileDevice() {
-  return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
-}
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:wght@700;800&display=swap');
 
-function signInWithGoogle() {
-  auth.signInWithPopup(googleProvider).catch((error) => {
-    console.error("Sign-in error:", error);
-    if (error.code === 'auth/popup-blocked' || error.code === 'auth/operation-not-supported-in-this-environment') {
-      // Only fall back to redirect if popups are genuinely unavailable
-      auth.signInWithRedirect(googleProvider);
-    } else if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
-      alert("Sign in failed (" + (error.code || 'unknown') + "). Please try again.");
-    }
-  });
-}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-// Completes sign-in if we ever fell back to the redirect flow
-auth.getRedirectResult().then((result) => {
-  if (result && result.user) {
-    console.log("Redirect sign-in completed for:", result.user.email);
-  }
-}).catch((error) => {
-  console.error("Redirect sign-in error:", error);
-  alert("Sign in failed (" + (error.code || 'unknown') + "). Please try again.");
-});
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            position: relative;
+            overflow-x: hidden;
+            min-height: 100vh;
+            background-color: #f1f4f9;
+            background-image:
+                radial-gradient(circle at -10% 35%, #cbdcfc 0%, transparent 75%),
+                radial-gradient(circle at 110% 65%, #fcd6d6 0%, transparent 75%),
+                radial-gradient(circle at 50% 0%, #e2eaf4 0%, transparent 60%);
+            background-attachment: fixed;
+        }
 
-function signOutUser() {
-  auth.signOut();
-}
+        .bg-logo-fixed {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 480px;
+            opacity: 0.04;
+            z-index: 0;
+            pointer-events: none;
+            user-select: none;
+            filter: grayscale(100%);
+        }
 
-function signUpWithEmail(name, email, password) {
-  return auth.createUserWithEmailAndPassword(email, password).then((result) => {
-    if (name) {
-      return result.user.updateProfile({ displayName: name }).then(() => result);
-    }
-    return result;
-  });
-}
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02);
+        }
 
-function signInWithEmail(email, password) {
-  return auth.signInWithEmailAndPassword(email, password);
-}
+        .heading-font { font-family: 'Playfair Display', serif; }
 
-function resetPassword(email) {
-  return auth.sendPasswordResetEmail(email);
-}
+        .tab-btn {
+            transition: all 0.25s ease;
+        }
+        .tab-btn.active {
+            background: linear-gradient(90deg, #dc2626, #1e3a8a);
+            color: white;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.18);
+        }
+        .tab-btn:not(.active) {
+            color: #64748b;
+            background: transparent;
+        }
 
-function getInitial(name) {
-  return name ? name.charAt(0).toUpperCase() : "U";
-}
+        .auth-input {
+            width: 100%;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 11px 14px 11px 40px;
+            font-size: 14px;
+            transition: all 0.2s;
+            background: #f8fafc;
+        }
+        .auth-input:focus {
+            outline: none;
+            border-color: #1e3a8a;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.08);
+        }
 
-function renderAuthUI(user) {
-  const desktopSlot = document.getElementById('authSlot');
-  const mobileSlot = document.getElementById('authSlotMobile');
+        .field-icon {
+            position: absolute;
+            left: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 13px;
+        }
 
-  if (user) {
-    const firstName = user.displayName ? user.displayName.split(' ')[0] : 'Account';
-    const fallbackAvatar = `https://placehold.co/64x64/e11d3f/white?text=${getInitial(firstName)}`;
-    const photo = user.photoURL || fallbackAvatar;
+        .primary-btn {
+            background: linear-gradient(90deg, #dc2626, #1e3a8a);
+            transition: all 0.2s;
+        }
+        .primary-btn:hover { filter: brightness(1.08); }
+        .primary-btn:active { transform: scale(0.98); }
+        .primary-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    const desktopHTML = `
-      <div class="flex items-center gap-2">
-        <img src="${photo}" alt="${firstName}" class="w-8 h-8 rounded-full border border-red-200 object-cover" referrerpolicy="no-referrer" onerror="this.src='${fallbackAvatar}'">
-        <span class="text-sm font-semibold text-gray-700 hidden lg:inline max-w-[90px] truncate">${firstName}</span>
-        <button onclick="signOutUser()" class="text-xs font-bold text-red-600 hover:text-white hover:bg-red-600 border border-red-200 rounded-full px-3 py-1.5 transition-all" aria-label="Logout">
-          <i class="fa-solid fa-right-from-bracket"></i>
-          <span class="hidden sm:inline">Logout</span>
-        </button>
-      </div>`;
+        .google-btn {
+            transition: all 0.2s;
+        }
+        .google-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
+        .google-btn:active { transform: scale(0.98); }
 
-    const mobileHTML = `
-      <div class="flex items-center justify-between py-2 px-3 rounded-xl bg-red-50 mb-2">
-        <div class="flex items-center gap-2 min-w-0">
-          <img src="${photo}" alt="${firstName}" class="w-7 h-7 rounded-full object-cover flex-shrink-0" referrerpolicy="no-referrer" onerror="this.src='${fallbackAvatar}'">
-          <span class="text-sm font-semibold text-gray-700 truncate">${firstName}</span>
+        .form-panel {
+            display: none;
+        }
+        .form-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .form-panel.active { animation: fadeIn 0.3s ease; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-3 sm:p-6">
+
+    <img src="logo.webp" class="bg-logo-fixed" alt="NorthGate Background Logo" onerror="this.style.display='none'">
+
+    <div class="content-wrapper w-full max-w-md rounded-2xl sm:rounded-3xl p-5 sm:p-9 my-6">
+
+        <div class="text-center mb-6">
+            <a href="index.html" class="inline-flex items-center gap-2 mb-4">
+                <img src="logo.webp" alt="NorthGate" class="h-10 w-auto object-contain" onerror="this.style.display='none'">
+                <span class="text-lg font-bold heading-font bg-gradient-to-r from-red-600 to-blue-700 bg-clip-text text-transparent">NorthGate</span>
+            </a>
+            <h2 class="text-2xl sm:text-3xl font-bold heading-font text-slate-900 mb-1 tracking-tight">Welcome</h2>
+            <p class="text-xs sm:text-sm text-slate-500 font-medium">Sign in to manage your visa applications.</p>
         </div>
-        <button onclick="signOutUser()" class="text-xs font-bold text-red-600 flex items-center gap-1 flex-shrink-0">
-          <i class="fa-solid fa-right-from-bracket"></i> Logout
+
+        <!-- Tabs -->
+        <div class="flex bg-slate-100 rounded-xl p-1 mb-6 text-sm font-bold">
+            <button id="tabLogin" class="tab-btn active flex-1 py-2.5 rounded-lg" onclick="switchTab('login')">Sign In</button>
+            <button id="tabSignup" class="tab-btn flex-1 py-2.5 rounded-lg" onclick="switchTab('signup')">Create Account</button>
+        </div>
+
+        <div id="formMsg" class="text-center text-xs sm:text-sm font-semibold mb-4 px-1 min-h-[18px]"></div>
+
+        <!-- Sign In Panel -->
+        <div id="panelLogin" class="form-panel active">
+            <form id="loginForm" onsubmit="return handleLogin(event)" class="space-y-3.5">
+                <div class="relative">
+                    <i class="fa-regular fa-envelope field-icon"></i>
+                    <input type="email" id="loginEmail" required placeholder="Email address" class="auth-input">
+                </div>
+                <div class="relative">
+                    <i class="fa-solid fa-lock field-icon"></i>
+                    <input type="password" id="loginPassword" required placeholder="Password" class="auth-input">
+                </div>
+                <div class="text-right -mt-1">
+                    <button type="button" onclick="handleForgotPassword()" class="text-xs font-semibold text-blue-800 hover:underline">Forgot password?</button>
+                </div>
+                <button type="submit" id="loginSubmitBtn" class="primary-btn w-full text-white font-bold py-3 rounded-xl text-sm shadow-md">
+                    Sign In
+                </button>
+            </form>
+        </div>
+
+        <!-- Sign Up Panel -->
+        <div id="panelSignup" class="form-panel">
+            <form id="signupForm" onsubmit="return handleSignup(event)" class="space-y-3.5">
+                <div class="relative">
+                    <i class="fa-regular fa-user field-icon"></i>
+                    <input type="text" id="signupName" required placeholder="Full name" class="auth-input">
+                </div>
+                <div class="relative">
+                    <i class="fa-regular fa-envelope field-icon"></i>
+                    <input type="email" id="signupEmail" required placeholder="Email address" class="auth-input">
+                </div>
+                <div class="relative">
+                    <i class="fa-solid fa-lock field-icon"></i>
+                    <input type="password" id="signupPassword" required minlength="6" placeholder="Password (min. 6 characters)" class="auth-input">
+                </div>
+                <div class="relative">
+                    <i class="fa-solid fa-lock field-icon"></i>
+                    <input type="password" id="signupConfirm" required minlength="6" placeholder="Confirm password" class="auth-input">
+                </div>
+                <button type="submit" id="signupSubmitBtn" class="primary-btn w-full text-white font-bold py-3 rounded-xl text-sm shadow-md">
+                    Create Account
+                </button>
+            </form>
+        </div>
+
+        <!-- Divider -->
+        <div class="flex items-center gap-3 my-5">
+            <div class="flex-1 h-px bg-slate-200"></div>
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Or</span>
+            <div class="flex-1 h-px bg-slate-200"></div>
+        </div>
+
+        <div id="gsiButtonContainer" class="flex justify-center min-h-[44px]"></div>
+        <button onclick="handleGoogleSignIn()" id="googleBtn" class="google-btn hidden w-full flex items-center justify-center gap-3 bg-white border-2 border-slate-200 text-slate-700 font-bold py-3 rounded-xl text-sm shadow-sm">
+            <i class="fa-brands fa-google text-red-500"></i>
+            Continue with Google
         </button>
-      </div>`;
 
-    if (desktopSlot) desktopSlot.innerHTML = desktopHTML;
-    if (mobileSlot) mobileSlot.innerHTML = mobileHTML;
-  } else {
-    const desktopBtnHTML = `
-      <a href="login.html" onclick="saveReturnUrl()" class="flex items-center gap-2 bg-gradient-to-r from-red-600 to-blue-800 hover:from-red-700 hover:to-blue-900 text-white text-sm font-bold px-4 py-2 rounded-full shadow-md transition-all" aria-label="Sign in">
-        <i class="fa-solid fa-user text-xs"></i>
-        <span class="hidden sm:inline">Sign in</span>
-      </a>`;
+        <p class="text-center text-xs text-slate-400 mt-6">
+            <a href="index.html" class="font-semibold text-slate-500 hover:text-blue-800"><i class="fa-solid fa-arrow-left mr-1"></i> Back to Home</a>
+        </p>
+    </div>
 
-    const mobileBtnHTML = `
-      <a href="login.html" onclick="saveReturnUrl()" class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-blue-800 text-white font-bold py-2.5 px-3 rounded-xl mb-2 text-sm">
-        <i class="fa-solid fa-user"></i> Sign In / Create Account
-      </a>`;
+    <script src="auth.js"></script>
+    <script>
+        function switchTab(tab) {
+            document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+            document.getElementById('tabSignup').classList.toggle('active', tab === 'signup');
+            document.getElementById('panelLogin').classList.toggle('active', tab === 'login');
+            document.getElementById('panelSignup').classList.toggle('active', tab === 'signup');
+            showMsg('');
+        }
 
-    if (desktopSlot) desktopSlot.innerHTML = desktopBtnHTML;
-    if (mobileSlot) mobileSlot.innerHTML = mobileBtnHTML;
-  }
-}
+        function showMsg(text, type) {
+            const el = document.getElementById('formMsg');
+            if (!text) { el.textContent = ''; return; }
+            el.className = 'text-center text-xs sm:text-sm font-semibold mb-4 px-1 min-h-[18px] ' +
+                (type === 'error' ? 'text-red-600' : type === 'success' ? 'text-emerald-600' : 'text-blue-800');
+            el.textContent = text;
+        }
 
-function saveReturnUrl() {
-  try {
-    if (!window.location.pathname.endsWith('login.html')) {
-      sessionStorage.setItem('ngReturnTo', window.location.href);
-    }
-  } catch (e) {}
-}
+        function friendlyError(error) {
+            const map = {
+                'auth/invalid-email': 'Please enter a valid email address.',
+                'auth/user-not-found': 'No account found with this email.',
+                'auth/wrong-password': 'Incorrect password. Please try again.',
+                'auth/invalid-credential': 'Incorrect email or password.',
+                'auth/email-already-in-use': 'An account already exists with this email.',
+                'auth/weak-password': 'Password should be at least 6 characters.',
+                'auth/too-many-requests': 'Too many attempts. Please try again later.',
+                'auth/network-request-failed': 'Network error. Please check your connection.',
+                'auth/unauthorized-domain': 'This domain is not authorized for sign-in yet.',
+                'auth/operation-not-allowed': 'Email/Password sign-in is not enabled yet. Please enable it in Firebase Console → Authentication → Sign-in method.'
+            };
+            return map[error.code] || ('Something went wrong (' + (error.code || 'unknown') + '). Please try again.');
+        }
 
-auth.onAuthStateChanged((user) => {
-  renderAuthUI(user);
-});
+        function redirectAfterAuth() {
+            let target = 'index.html';
+            try {
+                const saved = sessionStorage.getItem('ngReturnTo');
+                if (saved) target = saved;
+            } catch (e) {}
+            window.location.href = target;
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const btn = document.getElementById('loginSubmitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Signing in...';
+            showMsg('');
+
+            signInWithEmail(email, password)
+                .then(() => { showMsg('Signed in successfully. Redirecting…', 'success'); setTimeout(redirectAfterAuth, 600); })
+                .catch((error) => {
+                    showMsg(friendlyError(error), 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = 'Sign In';
+                });
+            return false;
+        }
+
+        function handleSignup(event) {
+            event.preventDefault();
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const password = document.getElementById('signupPassword').value;
+            const confirm = document.getElementById('signupConfirm').value;
+
+            if (password !== confirm) {
+                showMsg('Passwords do not match.', 'error');
+                return false;
+            }
+
+            const btn = document.getElementById('signupSubmitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating account...';
+            showMsg('');
+
+            signUpWithEmail(name, email, password)
+                .then(() => { showMsg('Account created successfully. Redirecting…', 'success'); setTimeout(redirectAfterAuth, 600); })
+                .catch((error) => {
+                    showMsg(friendlyError(error), 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = 'Create Account';
+                });
+            return false;
+        }
+
+        function handleForgotPassword() {
+            const email = document.getElementById('loginEmail').value.trim();
+            if (!email) {
+                showMsg('Enter your email above first, then tap "Forgot password?".', 'error');
+                return;
+            }
+            resetPassword(email)
+                .then(() => showMsg('Password reset email sent. Please check your inbox.', 'success'))
+                .catch((error) => showMsg(friendlyError(error), 'error'));
+        }
+
+        function handleGoogleSignIn() {
+            const btn = document.getElementById('googleBtn');
+            btn.disabled = true;
+            showMsg('');
+            signInWithGoogle();
+        }
+
+        // ---- Google Identity Services (GSI) — more reliable on mobile ----
+        const GSI_CLIENT_ID = "677518711425-lv9iaj25uqh26ba1alcg1lsibeg30kse.apps.googleusercontent.com";
+
+        function handleGsiCredentialResponse(response) {
+            showMsg('Signing you in…');
+            const credential = firebase.auth.GoogleAuthProvider.credential(response.credential);
+            auth.signInWithCredential(credential)
+                .then(() => { showMsg('Signed in successfully. Redirecting…', 'success'); setTimeout(redirectAfterAuth, 500); })
+                .catch((error) => { showMsg(friendlyError(error), 'error'); });
+        }
+
+        function initGoogleButton() {
+            const container = document.getElementById('gsiButtonContainer');
+            if (window.google && window.google.accounts && window.google.accounts.id) {
+                google.accounts.id.initialize({
+                    client_id: GSI_CLIENT_ID,
+                    callback: handleGsiCredentialResponse,
+                    auto_select: false
+                });
+                google.accounts.id.renderButton(container, {
+                    theme: "outline",
+                    size: "large",
+                    shape: "pill",
+                    text: "continue_with",
+                    width: Math.min(container.offsetWidth || 320, 360)
+                });
+            } else {
+                // GSI script failed to load (e.g. blocked) — show the fallback popup/redirect button
+                container.classList.add('hidden');
+                document.getElementById('googleBtn').classList.remove('hidden');
+            }
+        }
+
+        window.addEventListener('load', initGoogleButton);
+
+        // If already signed in, skip the form and go straight back
+        auth.onAuthStateChanged((user) => {
+            if (user) redirectAfterAuth();
+        });
+    </script>
+</body>
+</html>
